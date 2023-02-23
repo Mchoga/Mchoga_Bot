@@ -3,6 +3,8 @@ from telegram.ext import CallbackQueryHandler
 from ytmusic import YTMusicapp
 import database
 from telegram import *
+from youtube_dll import song_conversion
+import os
 
 
 
@@ -19,8 +21,8 @@ from telegram import *
 
 
 reply = ""
-searched_song_results = {}
-searched_album_results = {}
+searched_songs_results = {}
+searched_albums_results = {}
 music = YTMusicapp
 
 #music.YTmusicappclass.song_search("eminem")
@@ -32,13 +34,6 @@ def start(update, context):
 
     update.message.reply_text("Hello! My name is Morris, How can i help you today")
 
-    
-
-
-
-
-
-
 def song(update, context):
         global reply
         reply = "song"
@@ -48,10 +43,6 @@ def song(update, context):
         update.message.reply_text("Enter name of the song")
 
 
-    
-    
-    
-
 
 def album(update, context):
     global reply
@@ -59,8 +50,6 @@ def album(update, context):
     
     update.message.reply_text("Enter name of the Album")
     
-
-
 
 
 def help(update,context):
@@ -81,17 +70,17 @@ def help(update,context):
 
 def handle_message(update, context):
     global reply
-    global searched_song_results
+    global searched_songs_results
     
     if reply == "song":
         mhinduro = ""
         music.YTmusicappclass.song_search(update.message.text)
         reply = "song_search_results"
-        searched_song_results = database.song_searched_results
+        searched_songs_results = database.song_searched_results
 
 
-        for x in searched_song_results:
-            mhinduro += str(x+1)+'. '+searched_song_results[x][2] + " - " + searched_song_results[x][0] + "\n"
+        for x in searched_songs_results:
+            mhinduro += str(x+1) +'. ' + searched_songs_results[x][2] + " - " + searched_songs_results[x][0] + "\n"
 
         buttons = [[InlineKeyboardButton("1", callback_data="first_song",)],
                    [InlineKeyboardButton("2", callback_data="second_song")],
@@ -131,8 +120,45 @@ def handle_message(update, context):
     
     
 def song_callback(update, context):
+    print("Sending...")
+    chat_id = update.effective_chat.id
+    query = update.callback_query
+
+
+    if query.data =="first_song":
+
+
+        path = song_conversion.conversion().getsong(searched_songs_results,os.path.join(os.path.dirname(os.path.abspath(__file__))),0)
+
+        song = open(path,"rb")
+        context.bot.send_document(chat_id, song)
+
+    elif query.data =="second_song":
+        path = song_conversion.conversion().getsong(searched_songs_results,
+                                                    os.path.join(os.path.dirname(os.path.abspath(__file__))), 1)
+
+        song = open(path, "rb")
+        context.bot.send_document(chat_id, song)
+    elif query.data == "third_song":
+        path = song_conversion.conversion().getsong(searched_songs_results,
+                                                    os.path.join(os.path.dirname(os.path.abspath(__file__))), 2)
+
+        song = open(path, "rb")
+        context.bot.send_document(chat_id, song)
+
+
+   # document = open(song_conversion(//link), 'rb')
+
+    #context.bot.send_document(chat_id,document)
+
+
+
+
+
+
     # Code to handle when the song button is pressed
-    print("Song downloading...")
+
+
 
 def album_callback(update, context):
     # Code to handle when the album button is pressed

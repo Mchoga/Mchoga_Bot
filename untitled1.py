@@ -3,18 +3,8 @@ from ytmusicapi.parsers import browsing
 from ytmusicapi import YTMusic
 import os
 
-header = "C:\\Users\\mchog\\Desktop\\Mchoga_Bot\\ytmusic\\header.json"
-yt = YTMusic(header)
-results = yt.search("eminem", filter="albums")
-
-
-
-
-x = 77
-if x ==5:
-    print(5)
-
-if x ==7:
-    print(7)
-else:
-    print("none")
+header = os.path.join(os.path.dirname(os.path.abspath(__file__)),'ll')
+headers = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+print(header)
+print(headers+'\ll')
+ll = 'ff','ff'
