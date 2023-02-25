@@ -59,9 +59,11 @@ class conversion:
         mp4_no_frame.write_audiofile(audio_file, logger=None)
         mp4_no_frame.close()
         os.remove(vid_file)
-        os.replace(audio_file, searched_song_location+"\\"+yt.title+".mp3")
+        #os.replace(audio_file, searched_song_location+"\\"+yt.title+".mp3")
+        os.replace(audio_file, searched_song_location+"/"+yt.title+".mp3")
         print(audio_file)
-        audio_file = searched_song_location+"\\"+yt.title+".mp3"
+        #audio_file = searched_song_location+"\\"+yt.title+".mp3"
+        audio_file = searched_song_location+"/"+yt.title+".mp3"
 
         #
         # ydl_opts = {
@@ -161,14 +163,14 @@ class conversion:
             print(searched_song_location)
             print(searched_song_location)
 
-            # print('adding album art')
-            #
-            # audio = ID3(filename)
-            # with urllib.request.urlopen(artwork_url) as albumart:
-            #     audio["APIC"] = APIC(
-            #         encoding=3, mime="image/jpeg", type=3, desc="Cover", data=albumart.read()
-            #     )
-            # audio.save(v2_version=3)
+            print('adding album art')
+
+            audio = ID3(filename)
+            with urllib.request.urlopen(artwork_url) as albumart:
+                audio["APIC"] = APIC(
+                    encoding=3, mime="image/jpeg", type=3, desc="Cover", data=albumart.read()
+                )
+            audio.save(v2_version=3)
 
 
 
