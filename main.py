@@ -1,3 +1,5 @@
+import time
+
 import telegram.ext
 from telegram.ext import CallbackQueryHandler
 from ytmusic import YTMusicapp
@@ -5,14 +7,6 @@ import database
 from telegram import *
 from youtube_dll import song_conversion
 import os
-
-
-
-
-
-
-
-
 
 # useful code
 # update.message.reply_text(update.message.text)
@@ -23,6 +17,8 @@ import os
 reply = ""
 searched_songs_results = {}
 searched_albums_results = {}
+database.songs_root_location = os.path.join(os.path.dirname(os.path.abspath(__file__))) + "/Songs"
+# database.songs_root_location = os.path.join(os.path.dirname(os.path.abspath(__file__))) + "\\Songs"
 music = YTMusicapp
 
 #music.YTmusicappclass.song_search("eminem")
@@ -38,11 +34,8 @@ def start(update, context):
 def song(update, context):
         global reply
         reply = "song"
+        update.message.reply_text("Enter name of the song")
 
-
-
-        #update.message.reply_text("Enter name of the song")
-        update.message.reply_text(os.path.dirname(os.path.abspath(__file__)))
 
 
 
@@ -73,12 +66,14 @@ def help(update,context):
 def handle_message(update, context):
     global reply
     global searched_songs_results
-    
+    global searched_albums_results
+
     if reply == "song":
+        database.track_num = 1
         mhinduro = ""
         music.YTmusicappclass.song_search(update.message.text)
         reply = "song_search_results"
-        searched_songs_results = database.song_searched_results
+        searched_songs_results = database.songs_searched_results
 
 
         for x in searched_songs_results:
@@ -97,14 +92,15 @@ def handle_message(update, context):
     elif reply=="album":
 
         mhinduro = ""
+        database.track_num = 1
         music.YTmusicappclass.album_search(update.message.text)
         reply = "album_search_results"
-        searched_album_results = database.album_searched_results
+        searched_albums_results = database.albums_searched_results
 
 
 
-        for x in searched_album_results:
-            mhinduro += searched_album_results[x][0] + " - " + searched_album_results[x][1] + "\n"
+        for x in searched_albums_results:
+            mhinduro += str(x+1) +'. '+searched_albums_results[x][0] + " - " + searched_albums_results[x][1] + "\n"
 
         buttons = [[InlineKeyboardButton("1", callback_data="first_album")],
                    [InlineKeyboardButton("2", callback_data="second_album")],
@@ -117,54 +113,142 @@ def handle_message(update, context):
 
 
     else:
-        update.message.reply_text("Invalid Command")
+        update.message.reply_text("Invalid Command: Please choose a valid command")
 
     
     
 def song_callback(update, context):
-    print("Sending...")
+    print("Processing...")
     chat_id = update.effective_chat.id
     query = update.callback_query
+    path=None
+
 
 
     if query.data =="first_song":
 
 
-        path = song_conversion.conversion().getsong(searched_songs_results,os.path.join(os.path.dirname(os.path.abspath(__file__))),0)
+        path = song_conversion.conversion().getsong(0)
+
 
         song = open(path,"rb")
         context.bot.send_document(chat_id, song)
+        song.close()
+        database.album_downloaded_songs.clear()
+
+
+
 
     elif query.data =="second_song":
-        path = song_conversion.conversion().getsong(searched_songs_results,
-                                                    os.path.join(os.path.dirname(os.path.abspath(__file__))), 1)
+        path = song_conversion.conversion().getsong(1)
 
         song = open(path, "rb")
         context.bot.send_document(chat_id, song)
+        song.close()
     elif query.data == "third_song":
-        path = song_conversion.conversion().getsong(searched_songs_results,
-                                                    os.path.join(os.path.dirname(os.path.abspath(__file__))), 2)
+        path = song_conversion.conversion().getsong(2)
 
         song = open(path, "rb")
         context.bot.send_document(chat_id, song)
+        song.close()
 
-
-   # document = open(song_conversion(//link), 'rb')
-
-    #context.bot.send_document(chat_id,document)
-
-
-
-
-
-
-    # Code to handle when the song button is pressed
-
+    while True:
+        try:
+            os.remove(path)
+            print(f"Song successfully deleted: ")
+            break
+        except OSError as e:
+            if e.errno != 32:  # skip if error is not related to file lock
+                raise
+            print("Waiting to delete song")
+            time.sleep(0.1)  # wait for 100ms before trying again
 
 
 def album_callback(update, context):
     # Code to handle when the album button is pressed
+    chat_id = update.effective_chat.id
+    query = update.callback_query
+    path = None
     print("Album downloading...")
+    songs = database.album_downloaded_songs
+
+
+    if query.data =="first_album":
+
+        song_conversion.conversion.getalbum(1)
+
+
+
+        for path in database.album_downloaded_songs:
+            song = open(path, "rb")
+            context.bot.send_document(chat_id, song)
+            song.close()
+
+        for path in database.album_downloaded_songs:
+            while True:
+                try:
+                    os.remove(path)
+                    print(f"Song successfully deleted: ")
+                    break
+                except OSError as e:
+                    if e.errno != 32:  # skip if error is not related to file lock
+                        raise
+                    print("Waiting to delete song")
+                    time.sleep(0.1)  # wait for 100ms before trying again
+        for x in songs:
+            if x in database.album_downloaded_songs:
+                database.album_downloaded_songs.remove(x)
+
+
+
+
+    elif query.data =="second_album":
+        path = song_conversion.conversion.getalbum(1)
+
+        for path in database.album_downloaded_songs:
+            song = open(path, "rb")
+            context.bot.send_document(chat_id, song)
+            song.close()
+
+        for path in database.album_downloaded_songs:
+            while True:
+                try:
+                    os.remove(path)
+                    print(f"Song successfully deleted: ")
+                    break
+                except OSError as e:
+                    if e.errno != 32:  # skip if error is not related to file lock
+                        raise
+                    print("Waiting to delete song")
+                    time.sleep(0.1)  # wait for 100ms before trying again
+        for x in songs:
+            if x in database.album_downloaded_songs:
+                database.album_downloaded_songs.remove(x)
+
+
+    elif query.data == "third_album":
+        path = song_conversion.conversion.getalbum(2)
+
+        for path in database.album_downloaded_songs:
+            song = open(path, "rb")
+            context.bot.send_document(chat_id, song)
+            song.close()
+
+        for path in database.album_downloaded_songs:
+            while True:
+                try:
+                    os.remove(path)
+                    print(f"Song successfully deleted: ")
+                    break
+                except OSError as e:
+                    if e.errno != 32:  # skip if error is not related to file lock
+                        raise
+                    print("Waiting to delete song")
+                    time.sleep(0.1)  # wait for 100ms before trying again
+        for x in songs:
+            if x in database.album_downloaded_songs:
+                database.album_downloaded_songs.remove(x)
+
 
 
 
