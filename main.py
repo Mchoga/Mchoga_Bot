@@ -41,7 +41,8 @@ def song(update, context):
 
 
 
-        update.message.reply_text("Enter name of the song")
+        #update.message.reply_text("Enter name of the song")
+        update.message.reply_text(os.path.dirname(os.path.abspath(__file__)))
 
 
 
