@@ -151,15 +151,24 @@ class conversion:
 
 
             audio.save(v2_version=3)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
+            print(searched_song_location)
 
-            print('adding album art')
-
-            audio = ID3(filename)
-            with urllib.request.urlopen(artwork_url) as albumart:
-                audio["APIC"] = APIC(
-                    encoding=3, mime="image/jpeg", type=3, desc="Cover", data=albumart.read()
-                )
-            audio.save(v2_version=3)
+            # print('adding album art')
+            #
+            # audio = ID3(filename)
+            # with urllib.request.urlopen(artwork_url) as albumart:
+            #     audio["APIC"] = APIC(
+            #         encoding=3, mime="image/jpeg", type=3, desc="Cover", data=albumart.read()
+            #     )
+            # audio.save(v2_version=3)
 
 
 
