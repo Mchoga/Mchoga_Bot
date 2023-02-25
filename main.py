@@ -32,7 +32,8 @@ music = YTMusicapp
 
 def start(update, context):
 
-    update.message.reply_text("Hello! My name is Morris, How can i help you today")
+    update.message.reply_text("Hello "+update.effective_chat.first_name+"!"+". My name is Morris, How can i help you today")
+
 
 def song(update, context):
         global reply
