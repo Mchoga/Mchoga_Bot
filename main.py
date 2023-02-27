@@ -175,7 +175,7 @@ def album_callback(update, context):
 
     if query.data =="first_album":
 
-        song_conversion.conversion.getalbum(1)
+        path = song_conversion.conversion.getalbum(1)
 
 
 
