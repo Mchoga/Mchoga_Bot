@@ -175,7 +175,7 @@ def album_callback(update, context):
 
     if query.data =="first_album":
 
-        path = song_conversion.conversion.getalbum(1)
+        path = song_conversion.conversion.getalbum(0)
 
 
 
@@ -203,7 +203,7 @@ def album_callback(update, context):
 
 
     elif query.data =="second_album":
-        path = song_conversion.conversion.getalbum()
+        path = song_conversion.conversion.getalbum(1)
 
         for path in database.album_downloaded_songs:
             song = open(path, "rb")
