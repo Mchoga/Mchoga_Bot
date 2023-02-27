@@ -175,7 +175,7 @@ def album_callback(update, context):
 
     if query.data =="first_album":
 
-        path = song_conversion.conversion.getalbum(0)
+        song_conversion.conversion.getalbum(0)
 
 
 
@@ -195,15 +195,13 @@ def album_callback(update, context):
                         raise
                     print("Waiting to delete song")
                     time.sleep(0.1)  # wait for 100ms before trying again
-        for x in songs:
-            if x in database.album_downloaded_songs:
-                database.album_downloaded_songs.remove(x)
+        database.album_downloaded_songs.clear()
 
 
 
 
     elif query.data =="second_album":
-        path = song_conversion.conversion.getalbum(1)
+        song_conversion.conversion.getalbum(1)
 
         for path in database.album_downloaded_songs:
             song = open(path, "rb")
@@ -221,13 +219,11 @@ def album_callback(update, context):
                         raise
                     print("Waiting to delete song")
                     time.sleep(0.1)  # wait for 100ms before trying again
-        for x in songs:
-            if x in database.album_downloaded_songs:
-                database.album_downloaded_songs.remove(x)
+        database.album_downloaded_songs.clear()
 
 
     elif query.data == "third_album":
-        path = song_conversion.conversion.getalbum(2)
+        song_conversion.conversion.getalbum(2)
 
         for path in database.album_downloaded_songs:
             song = open(path, "rb")
@@ -245,9 +241,10 @@ def album_callback(update, context):
                         raise
                     print("Waiting to delete song")
                     time.sleep(0.1)  # wait for 100ms before trying again
-        for x in songs:
-            if x in database.album_downloaded_songs:
-                database.album_downloaded_songs.remove(x)
+        # for x in songs:
+        #     if x in database.album_downloaded_songs:
+        #         database.album_downloaded_songs.remove(x)
+        database.album_downloaded_songs.clear()
 
 
 
