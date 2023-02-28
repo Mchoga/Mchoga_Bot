@@ -65,12 +65,12 @@ class conversion:
             songs[count] = [title,database.albums_searched_results[index][1], album_detailed_info['artists'][0]['name'], 2000, single_song.video_id,album_detailed_info['thumbnails'][-1]['url']]
             count+=1
         database.songs_searched_results = songs
-        for num in songs:
-            conversion.song_download(num)
+        # for num in songs:
+        #     conversion.song_download(num)
 
 
 
-            #conversion().song_download(single_song.video_id)
+
 
 
 

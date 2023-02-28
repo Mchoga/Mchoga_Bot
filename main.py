@@ -2,6 +2,8 @@ import time
 
 import telegram.ext
 from telegram.ext import CallbackQueryHandler
+
+from youtube_dll.song_conversion import conversion
 from ytmusic import YTMusicapp
 import database
 from telegram import *
@@ -171,6 +173,7 @@ def album_callback(update, context):
     path = None
     print("Album downloading...")
     songs = database.album_downloaded_songs
+    count = 0;
 
 
     if query.data =="first_album":
@@ -179,10 +182,21 @@ def album_callback(update, context):
 
 
 
-        for path in database.album_downloaded_songs:
+        # for path in database.album_downloaded_songs:
+        #     song = open(path, "rb")
+        #     context.bot.send_document(chat_id, song)
+        #     song.close()
+
+        for number in database.songs_searched_results:
+            conversion.song_download(number)
+            path =database.album_downloaded_songs[count]
             song = open(path, "rb")
             context.bot.send_document(chat_id, song)
             song.close()
+
+
+
+
 
         for path in database.album_downloaded_songs:
             while True:
