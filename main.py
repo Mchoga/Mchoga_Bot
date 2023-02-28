@@ -294,7 +294,6 @@ disp = updater.dispatcher
 disp.add_handler(telegram.ext.CommandHandler('album', album))
 disp.add_handler(telegram.ext.CommandHandler('song', song))
 disp.add_handler(telegram.ext.CommandHandler('start', start))
-disp.add_handler(telegram.ext.CommandHandler('heyo', start))
 disp.add_handler(telegram.ext.CommandHandler('help', help))
 
 
