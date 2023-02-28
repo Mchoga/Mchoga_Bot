@@ -193,6 +193,7 @@ def album_callback(update, context):
             song = open(path, "rb")
             context.bot.send_document(chat_id, song)
             song.close()
+            count+=1
 
 
 
@@ -217,10 +218,18 @@ def album_callback(update, context):
     elif query.data =="second_album":
         song_conversion.conversion.getalbum(1)
 
-        for path in database.album_downloaded_songs:
+        # for path in database.album_downloaded_songs:
+        #     song = open(path, "rb")
+        #     context.bot.send_document(chat_id, song)
+        #     song.close()
+
+        for number in database.songs_searched_results:
+            conversion.song_download(number)
+            path =database.album_downloaded_songs[count]
             song = open(path, "rb")
             context.bot.send_document(chat_id, song)
             song.close()
+            count+=1
 
         for path in database.album_downloaded_songs:
             while True:
@@ -239,10 +248,18 @@ def album_callback(update, context):
     elif query.data == "third_album":
         song_conversion.conversion.getalbum(2)
 
-        for path in database.album_downloaded_songs:
+        # for path in database.album_downloaded_songs:
+        #     song = open(path, "rb")
+        #     context.bot.send_document(chat_id, song)
+        #     song.close()
+
+        for number in database.songs_searched_results:
+            conversion.song_download(number)
+            path =database.album_downloaded_songs[count]
             song = open(path, "rb")
             context.bot.send_document(chat_id, song)
             song.close()
+            count+=1
 
         for path in database.album_downloaded_songs:
             while True:
@@ -255,9 +272,7 @@ def album_callback(update, context):
                         raise
                     print("Waiting to delete song")
                     time.sleep(0.1)  # wait for 100ms before trying again
-        # for x in songs:
-        #     if x in database.album_downloaded_songs:
-        #         database.album_downloaded_songs.remove(x)
+
         database.album_downloaded_songs.clear()
 
 
